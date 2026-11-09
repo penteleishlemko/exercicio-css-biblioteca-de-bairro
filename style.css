@@ -21,6 +21,10 @@
     box-sizing: border-box; /* Exercício 04 */
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     background-color: var(--cor-fundo);
@@ -115,6 +119,30 @@ a:focus-visible,
 
 .botao:active {
     transform: translateY(2px);
+}
+
+.voltar-topo {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 10;
+    padding: 0.7rem 1rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--cor-principal);
+    color: #FFFFFF;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.voltar-topo:hover {
+    background: var(--cor-destaque);
+}
+
+.voltar-topo[hidden] {
+    display: none;
 }
 
 /*  5. COMPONENTES & CARTÕES (Exercício 04, 05 & 09) */
