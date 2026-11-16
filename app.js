@@ -86,6 +86,8 @@ const livrosMaiusculas = livros.map(titulo => titulo.toUpperCase());
 console.log("Títulos em maiúsculas:", livrosMaiusculas);
 
 // modulo 6 
+
+console.log("Modulo 6")
 const catalogo = [
   { titulo: "Os Maias", autor: "Eça de Queirós", ano: 1888, disponivel: true },
   { titulo: "Mensagem", autor: "Fernando Pessoa", ano: 1934, disponivel: false },
