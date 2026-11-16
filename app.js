@@ -84,3 +84,60 @@ console.log("Livros com mais de 10 letras:", livrosLongos);
 
 const livrosMaiusculas = livros.map(titulo => titulo.toUpperCase());
 console.log("Títulos em maiúsculas:", livrosMaiusculas);
+
+// modulo 6 
+const catalogo = [
+  { titulo: "Os Maias", autor: "Eça de Queirós", ano: 1888, disponivel: true },
+  { titulo: "Mensagem", autor: "Fernando Pessoa", ano: 1934, disponivel: false },
+  { titulo: "A Sibila", autor: "Agustina Bessa-Luís", ano: 1954, disponivel: true },
+  { titulo: "Os Lusíadas", autor: "Luís de Camões", ano: 1572, disponivel: true },
+  { titulo: "Memorial do Convento", autor: "José Saramago", ano: 1982, disponivel: false },
+  { titulo: "Aparição", autor: "Vergílio Ferreira", ano: 1959, disponivel: true }
+];
+
+// 02. Mostrar «Título — Autor (ano)» para cada livro
+for (const l of catalogo) {
+ 
+  console.log(`${l.titulo} — ${l.autor} (${l.ano})`);
+}
+
+// 03. Contar quantos livros estão disponíveis
+
+const totalDisponiveis = catalogo.filter(l => l.disponivel).length;
+console.log("Livros disponíveis:", totalDisponiveis);
+
+// 04. Encontrar e mostrar o livro mais antigo
+
+let antigo = catalogo[0];
+
+for (const l of catalogo) {
+  
+  if (l.ano < antigo.ano) {
+    antigo = l; 
+  }
+}
+console.log(`O livro mais antigo é "${antigo.titulo}" (${antigo.ano}).`);
+
+// 05. Função emprestar(titulo)
+function emprestar(titulo) {
+
+  const livro = catalogo.find(l => l.titulo === titulo);
+
+  if (!livro) return "Livro não encontrado.";
+
+
+  if (!livro.disponivel) return "Já está emprestado.";
+
+  
+  livro.disponivel = false;
+  return "Emprestado!";
+}
+
+
+console.log(emprestar("Harry Potter")); 
+console.log(emprestar("Mensagem"));     
+console.log(emprestar("Os Maias"));     
+console.log(emprestar("Os Maias"));     
+
+
+console.log("Disponíveis agora:", catalogo.filter(l => l.disponivel).length);
