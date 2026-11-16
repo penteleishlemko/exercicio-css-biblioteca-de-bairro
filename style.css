@@ -16,6 +16,24 @@
     --raio: 12px;
 }
 
+/* Módulo 9 - Modo Escuro */
+body.escuro {
+    --cor-principal: #F2CC8F;
+    --cor-destaque: #E07A5F;
+    --cor-fundo: #121822;
+    --cor-texto: #EAEAEA;
+    --cor-cartao: #1D2636;
+    --cor-borda: #2E3B52;
+}
+
+body.escuro .cabecalho {
+    background: #0D121A;
+}
+
+body.escuro aside {
+    background: rgba(255, 255, 255, 0.03);
+}
+
 /* 2. REGRAS BASE & RESET (Exercício 01, 03 & 04) */
 * {
     box-sizing: border-box; /* Exercício 04 */
@@ -48,7 +66,7 @@ img {
     height: auto;
 }
 
-/*  3. ELEMENTOS DE TEXTO & DECORAÇÃO (Exercício 02, 03 & 05) */
+/* 3. ELEMENTOS DE TEXTO & DECORAÇÃO (Exercício 02, 03 & 05) */
 /* Exercício 02 */
 .destaque {
     color: var(--cor-destaque);
@@ -71,6 +89,12 @@ li:first-child {
     font-weight: bold;
 }
 
+/* Módulo 7 - Livros emprestados */
+.indisponivel {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
 /* Exercício 05 */
 .aviso {
     background: linear-gradient(90deg, #E07A5F, #F2CC8F);
@@ -90,7 +114,7 @@ a {
     transition: color 0.2s ease;
 }
 
-/* Exercício 09*/
+/* Exercício 09 */
 a:hover {
     color: var(--cor-destaque);
 }
@@ -121,6 +145,14 @@ a:focus-visible,
     transform: translateY(2px);
 }
 
+/* Módulo 9 - Botão Modo Escuro */
+#tema {
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    font-weight: bold;
+}
+
 .voltar-topo {
     position: fixed;
     right: 1.25rem;
@@ -145,14 +177,13 @@ a:focus-visible,
     display: none;
 }
 
-/*  5. COMPONENTES & CARTÕES (Exercício 04, 05 & 09) */
+/* 5. COMPONENTES & CARTÕES (Exercício 04, 05 & 09) */
 .cartao {
     background: var(--cor-cartao);
     padding: 1.5rem;
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -206,7 +237,6 @@ a:focus-visible,
     color: #F2CC8F;
 }
 
-
 main {
     padding: 2rem 1rem;
 }
@@ -233,7 +263,7 @@ section {
     gap: 1.5rem;
 }
 
-/*Exercício 06 */
+/* Exercício 06 */
 .rodape {
     background: #1D2D44;
     color: #FFF8F0;
@@ -249,7 +279,6 @@ section {
 }
 
 /* 7. DESIGN RESPONSIVO / MEDIA QUERIES (Exercício 08) */
-
 
 @media (min-width: 768px) {
     .cabecalho {
@@ -278,9 +307,8 @@ section {
     }
 }
 
-
 @media (min-width: 1024px) {
-    /* Exercício 07*/
+    /* Exercício 07 */
     body {
         display: grid;
         grid-template-columns: 1fr 280px;
