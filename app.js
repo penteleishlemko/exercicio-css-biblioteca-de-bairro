@@ -129,10 +129,31 @@ console.log(emprestar("Os Maias"));
 console.log(emprestar("Os Maias"));
 console.log("Disponíveis agora:", catalogo.filter(l => l.disponivel).length);
 
+// Funções auxiliares de armazenamento (Módulo 3 & Módulo 6 - localStorage seguro)
+function ler(chave, porOmissao) {
+    const texto = localStorage.getItem(chave);
+    if (texto === null) return porOmissao;
+    try {
+        return JSON.parse(texto);
+    } catch {
+        return porOmissao;
+    }
+}
+
+function guardar(chave, valor) {
+    try {
+        localStorage.setItem(chave, JSON.stringify(valor));
+        return true;
+    } catch (erro) {
+        console.warn("Não foi possível guardar:", erro.name);
+        return false;
+    }
+}
+
 // Módulo 7
 const lista = document.querySelector("#lista-livros");
 const resumo = document.querySelector("#resumo-catalogo");
-let favoritos = JSON.parse(localStorage.getItem("favoritos")) ?? [];
+let favoritos = ler("favoritos", []);
 
 function mostrarLivros(listaLivros) {
     lista.replaceChildren();
@@ -155,7 +176,7 @@ function mostrarLivros(listaLivros) {
             } else {
                 favoritos.push(l.titulo);
             }
-            localStorage.setItem("favoritos", JSON.stringify(favoritos));
+            guardar("favoritos", favoritos);
             atualizar();
         });
 
@@ -224,53 +245,202 @@ async function carregarLivros() {
 
 carregarLivros();
 
+// --- Exercício 07: O tema que se lembra ---
 const botaoTema = document.querySelector("#tema");
-const tema = localStorage.getItem("tema");
-document.body.classList.toggle("escuro", tema === "escuro");
+
+function aplicarTema() {
+    const guardado = localStorage.getItem("tema");
+    const sistema = matchMedia("(prefers-color-scheme: dark)").matches;
+    const escuro = guardado ? guardado === "escuro" : sistema;
+
+    document.body.classList.toggle("escuro", escuro);
+    botaoTema.setAttribute("aria-pressed", escuro);
+}
 
 botaoTema.addEventListener("click", () => {
-    const escuro = document.body.classList.toggle("escuro");
+    const escuro = !document.body.classList.contains("escuro");
     localStorage.setItem("tema", escuro ? "escuro" : "claro");
+    aplicarTema();
 });
 
+aplicarTema();
+
+// --- Exercício 03: Contador de visitas ---
+const contador = document.querySelector("#contador");
+const recomecar = document.querySelector("#recomecar");
+
 const visitas = Number(localStorage.getItem("visitas")) + 1;
-
 localStorage.setItem("visitas", visitas);
-
 contador.textContent = `É a ${visitas}.ª vez que nos visitas`;
 
 recomecar.addEventListener("click", () => {
-  localStorage.removeItem("visitas");
-  contador.textContent = "Contador reposto.";
+    localStorage.removeItem("visitas");
+    contador.textContent = "Contador reposto.";
 });
 
-
-function ler(chave, porOmissao) {
-  const texto = localStorage.getItem(chave);
-  if (texto === null) return porOmissao;
-  try {
-    return JSON.parse(texto);
-  } catch {
-    return porOmissao;
-  }
-}
-
-function guardar(chave, valor) {
-  localStorage.setItem(chave, JSON.stringify(valor));
-}
-
+// --- Exercício 05: Ficha do leitor ---
 guardar("biblioteca:leitor", {
-  nome: "Ana",
-  cartao: "BB-1042",
-  generos: ["Romance", "Policial"],
+    nome: "Ana",
+    cartao: "BB-1042",
+    generos: ["Romance", "Policial"],
 });
 
 const leitor = ler("biblioteca:leitor", null);
+const saudacao = document.querySelector("#saudacao");
+const listaGeneros = document.querySelector("#listaGeneros");
 
 saudacao.textContent = `Olá, ${leitor?.nome ?? "visitante"}`;
 
+listaGeneros.replaceChildren();
 for (const genero of leitor?.generos ?? []) {
-  const li = document.createElement("li");
-  li.textContent = genero;
-  listaGeneros.append(li);
+    const li = document.createElement("li");
+    li.textContent = genero;
+    listaGeneros.append(li);
 }
+
+// --- Exercício 08: A lista de leitura que fica ---
+let leitura = ler("biblioteca:leitura", []);
+
+const formLeitura = document.querySelector("#form-leitura");
+const inputLeitura = document.querySelector("#novo-livro-leitura");
+const ulLeitura = document.querySelector("#lista-leitura");
+
+function mostrarLeitura(listaAtual) {
+    ulLeitura.replaceChildren();
+
+    listaAtual.forEach((livro, indice) => {
+        const li = document.createElement("li");
+        li.dataset.indice = indice;
+        li.style.cursor = "pointer";
+
+        const span = document.createElement("span");
+        span.textContent = livro.titulo;
+        if (livro.lido) {
+            span.style.textDecoration = "line-through";
+            span.style.opacity = "0.6";
+        }
+
+        const btnSubir = document.createElement("button");
+        btnSubir.textContent = "↑";
+        btnSubir.dataset.acao = "subir";
+
+        const btnDescer = document.createElement("button");
+        btnDescer.textContent = "↓";
+        btnDescer.dataset.acao = "descer";
+
+        const btnRemover = document.createElement("button");
+        btnRemover.textContent = "Remover";
+        btnRemover.dataset.acao = "remover";
+
+        li.append(span, " ", btnSubir, " ", btnDescer, " ", btnRemover);
+        ulLeitura.append(li);
+    });
+}
+
+function atualizarLeitura() {
+    guardar("biblioteca:leitura", leitura);
+    mostrarLeitura(leitura);
+}
+
+formLeitura.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const titulo = inputLeitura.value.trim();
+    if (!titulo) return;
+
+    leitura.push({ titulo, lido: false });
+    inputLeitura.value = "";
+    atualizarLeitura();
+});
+
+ulLeitura.addEventListener("click", (evento) => {
+    const botao = evento.target.closest("button");
+    const li = evento.target.closest("li");
+    if (!li) return;
+
+    const i = Number(li.dataset.indice);
+
+    if (!botao) {
+        leitura[i].lido = !leitura[i].lido;
+    } else if (botao.dataset.acao === "remover") {
+        leitura.splice(i, 1);
+    } else if (botao.dataset.acao === "subir" && i > 0) {
+        [leitura[i - 1], leitura[i]] = [leitura[i], leitura[i - 1]];
+    } else if (botao.dataset.acao === "descer" && i < leitura.length - 1) {
+        [leitura[i + 1], leitura[i]] = [leitura[i], leitura[i + 1]];
+    }
+
+    atualizarLeitura();
+});
+
+mostrarLeitura(leitura);
+
+// --- Exercício 09: Um aviso por visita (sessionStorage) ---
+const CHAVE_AVISO = "biblioteca:aviso-fechado";
+const faixaAviso = document.querySelector("#faixa-aviso");
+const btnFecharAviso = document.querySelector("#fechar-aviso");
+
+if (sessionStorage.getItem(CHAVE_AVISO) !== "sim") {
+    faixaAviso.hidden = false;
+}
+
+btnFecharAviso.addEventListener("click", () => {
+    faixaAviso.hidden = true;
+    sessionStorage.setItem(CHAVE_AVISO, "sim");
+});
+
+// --- Exercício 10: Dois separadores, uma lista ---
+window.addEventListener("storage", (evento) => {
+    if (evento.key === "biblioteca:leitura") {
+        leitura = ler("biblioteca:leitura", []);
+        mostrarLeitura(leitura);
+    }
+
+    if (evento.key === "tema") {
+        aplicarTema();
+    }
+});
+
+// --- Exercício 11: Últimas pesquisas ---
+const CHAVE_PESQUISAS = "biblioteca:pesquisas";
+const SETE_DIAS = 7 * 24 * 60 * 60 * 1000;
+const boxPesquisas = document.querySelector("#ultimas-pesquisas");
+
+function lerPesquisas() {
+    const caixa = ler(CHAVE_PESQUISAS, null);
+    if (!caixa || caixa.versao !== 1) return [];
+    if (Date.now() - caixa.guardadoEm > SETE_DIAS) {
+        localStorage.removeItem(CHAVE_PESQUISAS);
+        return [];
+    }
+    return caixa.dados;
+}
+
+function mostrarUltimasPesquisas() {
+    const termos = lerPesquisas();
+    boxPesquisas.replaceChildren();
+    if (!termos.length) return;
+
+    boxPesquisas.append("Recentes: ");
+    for (const termo of termos) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = termo;
+        btn.addEventListener("click", () => {
+            pesquisa.value = termo;
+            atualizar();
+        });
+        boxPesquisas.append(btn, " ");
+    }
+}
+
+function registarPesquisa(termo) {
+    const limpo = termo.trim();
+    if (!limpo) return;
+    const antigas = lerPesquisas().filter((t) => t.toLowerCase() !== limpo.toLowerCase());
+    const dados = [limpo, ...antigas].slice(0, 5);
+    guardar(CHAVE_PESQUISAS, { versao: 1, guardadoEm: Date.now(), dados });
+    mostrarUltimasPesquisas();
+}
+
+pesquisa.addEventListener("change", () => registarPesquisa(pesquisa.value));
+mostrarUltimasPesquisas();

@@ -31,12 +31,32 @@
         <button id="tema" class="botao">Modo Escuro</button>
     </header>
 
-    <div class="aviso">
-        <p>Feira do Livro · 13 a 15 de novembro</p>
+    <!-- Exercício 09: Aviso por visita (sessionStorage) -->
+    <div id="faixa-aviso" class="aviso" hidden>
+        <p>Hoje a biblioteca fecha às 13h</p>
+        <button id="fechar-aviso" class="botao">Fechar</button>
     </div>
 
     <main>
         <h2>Pentelei Shlemko</h2>
+
+        <!-- Exercício 05: Ficha do Leitor -->
+        <section id="ficha-leitor">
+            <h2 id="saudacao"></h2>
+            <p>Géneros preferidos:</p>
+            <ul id="listaGeneros"></ul>
+        </section>
+
+        <!-- Exercício 08: Lista de leitura -->
+        <section id="secao-leitura">
+            <h2>A Minha Lista de Leitura</h2>
+            <form id="form-leitura">
+                <input type="text" id="novo-livro-leitura" placeholder="Título do livro..." required>
+                <button type="submit" class="botao">Adicionar</button>
+            </form>
+            <ul id="lista-leitura"></ul>
+        </section>
+
         <section id="inicio">
             <p class="destaque">Bem-vindo à Biblioteca do Bairro! Livros, eventos e leitura para todos, desde 1987.</p>
         </section>
@@ -50,6 +70,9 @@
                 <input type="text" id="pesquisa" placeholder="Pesquisar título...">
                 <button id="so-disponiveis" class="botao">Só disponíveis</button>
             </div>
+
+            <!-- Exercício 11: Últimas pesquisas -->
+            <div id="ultimas-pesquisas"></div>
 
             <ul id="lista-livros"></ul>
         </section>
@@ -113,11 +136,6 @@
         <p>Domingo: Fechado</p>
     </aside>
 
-    <h1 id="saudacao"></h1>
-  <ul id="listaGeneros"></ul>
-
-  <script src="leitor.js"></script>
-
     <footer class="rodape">
         <div>
             <h4>Morada</h4>
@@ -130,6 +148,12 @@
         <div>
             <h4>Redes Sociais</h4>
             <p>@bibliotecadobairro</p>
+        </div>
+        <!-- Exercício 03: Contador de visitas -->
+        <div>
+            <h4>Estatísticas</h4>
+            <p id="contador"></p>
+            <button id="recomecar" class="botao">Recomeçar</button>
         </div>
     </footer>
 
