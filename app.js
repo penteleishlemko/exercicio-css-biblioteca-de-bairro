@@ -243,3 +243,34 @@ recomecar.addEventListener("click", () => {
   localStorage.removeItem("visitas");
   contador.textContent = "Contador reposto.";
 });
+
+
+function ler(chave, porOmissao) {
+  const texto = localStorage.getItem(chave);
+  if (texto === null) return porOmissao;
+  try {
+    return JSON.parse(texto);
+  } catch {
+    return porOmissao;
+  }
+}
+
+function guardar(chave, valor) {
+  localStorage.setItem(chave, JSON.stringify(valor));
+}
+
+guardar("biblioteca:leitor", {
+  nome: "Ana",
+  cartao: "BB-1042",
+  generos: ["Romance", "Policial"],
+});
+
+const leitor = ler("biblioteca:leitor", null);
+
+saudacao.textContent = `Olá, ${leitor?.nome ?? "visitante"}`;
+
+for (const genero of leitor?.generos ?? []) {
+  const li = document.createElement("li");
+  li.textContent = genero;
+  listaGeneros.append(li);
+}
