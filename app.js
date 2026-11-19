@@ -232,3 +232,14 @@ botaoTema.addEventListener("click", () => {
     const escuro = document.body.classList.toggle("escuro");
     localStorage.setItem("tema", escuro ? "escuro" : "claro");
 });
+
+const visitas = Number(localStorage.getItem("visitas")) + 1;
+
+localStorage.setItem("visitas", visitas);
+
+contador.textContent = `É a ${visitas}.ª vez que nos visitas`;
+
+recomecar.addEventListener("click", () => {
+  localStorage.removeItem("visitas");
+  contador.textContent = "Contador reposto.";
+});
